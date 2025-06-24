@@ -25,18 +25,36 @@ namespace AppareoFlightVideoPlayer
         private WindowStyle _previousWindowStyle;
         private ResizeMode _previousResizeMode;
 
+        // The error CS1061 indicates that 'MediaPlayer' does not contain a definition for 'SetVideoBackground'.
+        // Based on the provided type signatures, there is no method named 'SetVideoBackground' in the 'MediaPlayer' class.
+        // To fix this issue, the line `_mediaPlayer.SetVideoBackground(0x000000);` should be removed as it is invalid.
+
         public MainWindow()
         {
             InitializeComponent();
 
-            // Path to the VLC native libraries
-            var libVlcPath = Path.Combine(AppContext.BaseDirectory, "libvlc", "win-x64");
+            // Preferred path to the VLC native libraries
+            var preferredLibVlcPath = Path.Combine(AppContext.BaseDirectory, "libvlc", "win-x64");
 
-            // Initialize LibVLC with the path to native libraries
-            Core.Initialize(libVlcPath);
+            // Fallback path (base directory)
+            var fallbackLibVlcPath = AppContext.BaseDirectory;
 
+            // Determine which path to use
+            string libVlcPathToUse = Directory.Exists(preferredLibVlcPath) && File.Exists(Path.Combine(preferredLibVlcPath, "libvlc.dll")) ? 
+                preferredLibVlcPath
+                :
+                fallbackLibVlcPath;
+
+            // Initialize LibVLC with the selected path
+            Core.Initialize(libVlcPathToUse);
+
+            //_libVLC = new LibVLC("--video-background=0x000000"); // Black background
+            //_libVLC = new LibVLC("--no - audio");
             _libVLC = new LibVLC();
+
             _mediaPlayer = new MediaPlayer(_libVLC);
+            //_mediaPlayer.Scale = 1; // 1 usually means "fill"
+
             videoView.MediaPlayer = _mediaPlayer;
 
             _mediaPlayer.LengthChanged += MediaPlayer_LengthChanged;
@@ -141,6 +159,8 @@ namespace AppareoFlightVideoPlayer
                 WindowState = WindowState.Maximized;
                 ResizeMode = ResizeMode.NoResize;
                 _isFullscreen = true;
+                FullscreenButton.Content = "Exit fullscreen";
+
             }
             else
             {
@@ -148,7 +168,13 @@ namespace AppareoFlightVideoPlayer
                 WindowState = _previousWindowState;
                 ResizeMode = _previousResizeMode;
                 _isFullscreen = false;
+                FullscreenButton.Content = "Fullscreen";
+
+
             }
+            // Force redraw
+            this.InvalidateVisual();
+            this.UpdateLayout();
         }
 
         private void UpdateTimeText()

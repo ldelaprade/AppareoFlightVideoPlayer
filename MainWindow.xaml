@@ -8,11 +8,13 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <vlc:VideoView x:Name="videoView"
-                       Grid.Row="0"
-                       HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch"
-                       Margin="10" />
+        <Border Background="WhiteSmoke" BorderBrush="WhiteSmoke" BorderThickness="0" CornerRadius="8,8,3,3">
+            <vlc:VideoView x:Name="videoView" Background="White"
+                               Grid.Row="0"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               Margin="10" />
+        </Border>
 
         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -24,8 +26,8 @@
                 <TextBlock x:Name="TimeText" Width="120" Margin="10,0,0,0" VerticalAlignment="Center" Text="00:00 / 00:00"/>
             </StackPanel>
             <Slider x:Name="SeekBar" Minimum="0" Maximum="100" Value="0" Height="20" Margin="0,5,0,0"
-                    PreviewMouseDown="SeekBar_PreviewMouseDown"
-                    PreviewMouseUp="SeekBar_PreviewMouseUp"/>
+                        PreviewMouseDown="SeekBar_PreviewMouseDown"
+                        PreviewMouseUp="SeekBar_PreviewMouseUp"/>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
                 <TextBlock Text="Volume" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <Slider x:Name="VolumeSlider" Minimum="0" Maximum="100" Value="100" Width="120" ValueChanged="VolumeSlider_ValueChanged"/>
